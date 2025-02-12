@@ -1,0 +1,15 @@
+.cards-container {
+  background-color: #1c2126;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #3c4753;
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+  margin-top: 20px; /* Manter espaço acima */
+}
+
+.cards-container h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}

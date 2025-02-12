@@ -1,0 +1,20 @@
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.dashboard-content h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.dashboard-content p {
+  color: #9dabb8;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 30px;
+}

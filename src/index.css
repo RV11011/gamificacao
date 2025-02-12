@@ -1,0 +1,31 @@
+body {
+    margin: 0;
+    font-family: 'Manrope', sans-serif;
+    background-color: #111418;
+    color: #ffffff;
+    min-height: 100vh;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  .navigation {
+    padding: 10px 20px;
+    background-color: #1c2126;
+    text-align: right;
+  }
+  
+  .navigation a {
+    color: #9dabb8;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .navigation a:hover,
+  .navigation a.active {
+    background-color: #293038;
+    color: #ffffff;
+  }

@@ -1,0 +1,65 @@
+.ranking-container {
+  width: 100%;
+  max-width: 1200px; /* Aumentar a largura máxima */
+  background: linear-gradient(135deg, #2a2f33 0%, #1c2126 100%);
+  padding: 40px; /* Maior espaçamento interno */
+  border-radius: 12px; 
+  border: 1px solid #3c4753;
+  margin-top: 30px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Adicionando sombra */
+  transition: transform 0.3s;
+}
+
+.ranking-container:hover {
+  transform: translateY(-5px); /* Efeito de hover */
+}
+
+.ranking-container h2 {
+  margin-bottom: 20px; 
+  font-size: 28px; 
+  font-weight: 700;
+  text-align: center;
+  color: #ffffff;
+}
+
+.ranking-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.ranking-table thead {
+  background-color: #293038;
+}
+
+.ranking-table th, .ranking-table td {
+  padding: 20px; /* Maior espaçamento interno */
+  border-bottom: 1px solid #3c4753;
+  font-size: 20px; 
+  font-weight: 500;
+}
+
+.ranking-table th {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.ranking-table td {
+  color: #9dabb8;
+}
+
+.ranking-table tr:hover {
+  background-color: #293038;
+}
+
+.top-rank td {
+  color: #ffff00; 
+  font-weight: bold;
+  font-size: 22px; /* Aumentar fonte para o primeiro */
+}
+
+.star-icon {
+  color: #ffd700;  
+  margin-right: 8px; 
+  font-size: 24px; /* Aumentar ícone */
+}

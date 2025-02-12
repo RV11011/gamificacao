@@ -1,0 +1,208 @@
+body {
+  margin: 0;
+  font-family: 'Manrope', sans-serif;
+  background: #0f1117;
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.dashboard-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 25px 20px;
+  background: rgba(28, 33, 38, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.dashboard-title {
+  margin: 0 0 10px 0;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.dashboard-nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.dashboard-nav a {
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(144, 19, 254, 0.1));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.dashboard-nav a:hover,
+.dashboard-nav a.active {
+  background: linear-gradient(to right, #4a4f54, #3a3f44);
+  color: #ffffff;
+  border: 1px solid #3c4753;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.main-content {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 1200px;
+  min-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cards-container {
+  width: 100%;
+  max-width: 1200px;
+  min-width: 1000px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin: 30px auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  box-sizing: border-box;
+}
+
+.cards-container h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.main-content > * {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Ajuste das animações de transição */
+.fade-enter {
+  opacity: 0;
+  transform: translateY(20px);
+  position: absolute;
+  width: 100%;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 150ms ease-out;
+}
+
+.fade-exit {
+  opacity: 1;
+  transform: translateY(0);
+  position: absolute;
+  width: 100%;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 100ms ease-in;
+}
+
+/* Garante que os componentes ocupem toda a largura disponível */
+.route-section {
+  width: 100%;
+  min-width: 1000px;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* Previne redimensionamento dos containers */
+.ranking-container,
+.cards-container,
+.home-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Força largura consistente para tabelas e cards */
+.ranking-table,
+.overview-cards {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Previne redimensionamento dos cards */
+.overview-card {
+  flex: 0 1 calc(25% - 20px);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  color: #ffffff;
+  margin-bottom: 15px;
+  font-size: 24px;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.overview-card:hover .icon {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.ranking-table {
+  width: 100%;
+  min-width: 920px;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.ranking-table th {
+  width: 33.33%;
+  padding: 20px;
+  font-size: 20px;
+}
+
+.ranking-table td {
+  width: 33.33%;
+  padding: 20px;
+  font-size: 20px;
+}

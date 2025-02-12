@@ -1,0 +1,98 @@
+#tsparticles {
+  position: fixed !important;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.app-container {
+  position: relative;
+  z-index: 2;
+}
+
+.background-effect {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background: linear-gradient(45deg, #0a0f18, #1a1f2e);
+  overflow: hidden;
+}
+
+/* Grade digital com linhas mais sutis */
+.background-effect::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: 
+    linear-gradient(90deg, transparent 99%, rgba(74, 144, 226, 0.1) 99%),
+    linear-gradient(0deg, transparent 99%, rgba(144, 19, 254, 0.1) 99%);
+  background-size: 30px 30px;
+  animation: gridMove 20s linear infinite;
+}
+
+/* Círculos de tecnologia flutuantes */
+.tech-circles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(74, 144, 226, 0.05) 0%, transparent 50px),
+    radial-gradient(circle at 80% 80%, rgba(144, 19, 254, 0.05) 0%, transparent 50px),
+    radial-gradient(circle at 50% 50%, rgba(74, 144, 226, 0.05) 0%, transparent 100px),
+    radial-gradient(circle at 80% 20%, rgba(144, 19, 254, 0.05) 0%, transparent 30px),
+    radial-gradient(circle at 20% 80%, rgba(74, 144, 226, 0.05) 0%, transparent 30px);
+  filter: blur(1px);
+  animation: techFloat 15s ease-in-out infinite;
+}
+
+/* Linhas de código digitais */
+.digital-lines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 20px,
+      rgba(74, 144, 226, 0.02) 20px,
+      rgba(74, 144, 226, 0.02) 21px
+    );
+  animation: digitalMove 10s linear infinite;
+}
+
+@keyframes techFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.1); }
+}
+
+@keyframes digitalMove {
+  from { background-position: 0 0; }
+  to { background-position: 50px 50px; }
+}
+
+@keyframes gridMove {
+  from { transform: translateX(0); }
+  to { transform: translateX(30px); }
+}
+
+.grain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+} 
