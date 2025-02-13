@@ -1,11 +1,23 @@
 import React from 'react';
 import './Home.css';
 
-const Home = () => {
+const Home = ({ username }) => {
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    
+    if (hour >= 5 && hour < 12) {
+      return "Bom dia";
+    } else if (hour >= 12 && hour < 18) {
+      return "Boa tarde";
+    } else {
+      return "Boa noite";
+    }
+  };
+
   return (
     <div className="home-container">
       <div className="greeting">
-        <h1>Good morning, Alex</h1>
+        <h1>{getGreeting()}, XXXXXX</h1>
         <p>Bem vindo a Gamificação</p>
       </div>
       <div className="overview-cards">

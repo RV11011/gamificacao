@@ -11,7 +11,7 @@ import CartoesFalha from './CartoesFalha';
 import MetricasPessoais from './MetricasPessoais';
 import './AppContainer.css';
 
-const AppContainer = () => {
+const AppContainer = ({ username }) => {
   const location = useLocation();
 
   return (
@@ -19,7 +19,7 @@ const AppContainer = () => {
       <CSSTransition key={location.key} classNames="fade" timeout={300}>
         <div className="route-section">
           <Routes location={location}>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home username={username} />} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />}>
               <Route path="ranking-geral" element={<RankingGeral />} />
