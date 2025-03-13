@@ -2,56 +2,82 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 const fs = require('fs');
 const path = require('path');
 
-// Carregue as credenciais do arquivo JSON
+// 1. Carregar credenciais
 const credentialsPath = path.join(__dirname, 'service-account.json');
 if (!fs.existsSync(credentialsPath)) {
   console.error('Arquivo service-account.json não encontrado.');
   process.exit(1);
 }
-
 const credentials = JSON.parse(fs.readFileSync(credentialsPath));
-console.log('Credenciais carregadas:', credentials);
 
-// ID da planilha do Google Sheets
-const SPREADSHEET_ID = '1n01Pj7vZftKbmGW4SoLhankSl1Rqua7zwqqscPhN4ow';
+// 2. Mapeamento completo das colunas (NA ORDEM EXATA DA PLANILHA)
+const CUSTOM_HEADERS = [
+  'Data',
+  'Combinação',
+  'Departamento',
+  'Atendente',
+  'Função',
+  'Atendimentos',
+  'TMF',
+  'TMA',
+  'Implantações',
+  'Erros de Documentação',
+  'SLA no Prazo',
+  'Média Score',
+  'Taxa de Avaliação',
+  'Notas Justas',
+  'Problemas Comportamentais',
+  'Problemas Técnicos',
+  'Problemas Críticos',
+  'Treinamento participado',
+  'Treinamento realizado',
+  'Projetos/Desafios',
+  'PDIs',
+  'Cartões de Falha',
+  'Cartões de Melhoria',
+  'Cartões de Tarefa',
+  'Ajuste do GM',
+  'Total'
+];
 
-// Nome da aba que você deseja ler
-const SHEET_TITLE = 'Cálculo de XP'; // Substitua pelo nome da aba que você deseja ler
-
-// Função para ler dados da planilha
 async function readSheet() {
   try {
-    console.log('Iniciando leitura da planilha...');
-    const doc = new GoogleSpreadsheet(SPREADSHEET_ID);
-
-    // Autenticar com o serviço de contas
+    const doc = new GoogleSpreadsheet('1n01Pj7vZftKbmGW4SoLhankSl1Rqua7zwqqscPhN4ow');
+    
+    // 3. Autenticar
     await doc.useServiceAccountAuth({
       client_email: credentials.client_email,
       private_key: credentials.private_key,
     });
-    console.log('Autenticação bem-sucedida.');
-
-    // Carregar a planilha
     await doc.loadInfo();
-    console.log(`Título da planilha: ${doc.title}`);
 
-    // Selecionar a aba desejada
-    const sheet = doc.sheetsByTitle[SHEET_TITLE];
-    if (!sheet) {
-      console.error(`Aba "${SHEET_TITLE}" não encontrada.`);
-      return;
-    }
+    // 4. Carregar a aba correta
+    const sheet = doc.sheetsByTitle['Cálculo de XP'];
+    if (!sheet) throw new Error('Aba não encontrada');
 
-    // Carregar as linhas da aba
+    // 5. Ler todas as linhas brutas
     const rows = await sheet.getRows();
-    console.log('Dados da planilha:');
-    rows.forEach((row) => {
-      console.log(row._rawData);
+
+    // 6. Processar cada linha com o mapeamento correto
+    console.log('\n=== DADOS COMPLETOS DA PLANILHA ===');
+    rows.forEach((row, index) => {
+      const registro = {};
+      CUSTOM_HEADERS.forEach((header, colIndex) => {
+        registro[header] = row._rawData[colIndex] || 'N/D';
+      });
+      
+      console.log(`\nRegistro #${index + 1}:`);
+      console.log('Atendente:', registro.Atendente);
+      console.log('Detalhes:', {
+        Data: registro.Data,
+        Departamento: registro.Departamento,
+        Total: registro.Total
+      });
     });
+
   } catch (error) {
-    console.error('Erro ao ler a planilha:', error);
+    console.error('Erro:', error.message);
   }
 }
 
-// Executar a função de leitura da planilha
-readSheet().catch(console.error);
+readSheet();
