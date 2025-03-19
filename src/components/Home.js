@@ -17,13 +17,13 @@ const Home = ({ username }) => {
   return (
     <div className="home-container">
       <div className="greeting">
-        <h1>{getGreeting()}, XXXXXX</h1>
+        <h1>{getGreeting()}, {username}</h1>
         <p>Bem vindo a Gamificação</p>
       </div>
       <div className="overview-cards">
         <div className="overview-card">
           <div className="icon">
-            <i className="fas fa-headset"></i>
+            <img src="/icons/atendimentos-abertos.png" alt="Atendimentos abertos" className="icon" />
           </div>
           <div className="overview-details">
             <h2>Atendimentos abertos</h2>
@@ -32,7 +32,7 @@ const Home = ({ username }) => {
         </div>
         <div className="overview-card">
           <div className="icon">
-            <i className="fas fa-hourglass-half"></i>
+            <img src="/icons/atendimentos-fila.png" alt="Atendimentos com mais de 10 minutos na fila" className="icon" />
           </div>
           <div className="overview-details">
             <h2>Atendimentos com mais de 10 minutos na fila</h2>
@@ -41,7 +41,7 @@ const Home = ({ username }) => {
         </div>
         <div className="overview-card">
           <div className="icon">
-            <i className="fas fa-star"></i>
+            <img src="/icons/score-medio.png" alt="Score Médio" className="icon" />
           </div>
           <div className="overview-details">
             <h2>Score Médio</h2>
@@ -50,7 +50,7 @@ const Home = ({ username }) => {
         </div>
         <div className="overview-card">
           <div className="icon">
-            <i className="fas fa-triangle-exclamation"></i>
+            <img src="/icons/finalizados-sem-motivo.png" alt="Finalizados sem motivo informado" className="icon" />
           </div>
           <div className="overview-details">
             <h2>Finalizados sem motivo informado</h2>
