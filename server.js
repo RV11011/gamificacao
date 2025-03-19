@@ -1,13 +1,23 @@
+require('dotenv').config();
 const express = require('express');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const app = express();
 const port = 3001; // Porta para o servidor backend
 
 app.use(cors()); // Permitir requisições CORS
+app.use(bodyParser.json()); // Parse JSON bodies
+
+// Usuários predefinidos
+const users = [
+  { username: process.env.USER1_USERNAME, password: process.env.USER1_PASSWORD },
+  { username: process.env.USER2_USERNAME, password: process.env.USER2_PASSWORD },
+  { username: process.env.USER3_USERNAME, password: process.env.USER3_PASSWORD }
+];
 
 // Carregar credenciais
 const credentialsPath = path.join(__dirname, 'service-account.json');
@@ -66,6 +76,18 @@ async function getSheetData() {
     return registro;
   });
 }
+
+// Rota para login
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body;
+  const user = users.find(u => u.username === username && u.password === password);
+
+  if (user) {
+    res.status(200).json({ username: user.username });
+  } else {
+    res.status(401).send('Credenciais inválidas');
+  }
+});
 
 app.get('/api/data', async (req, res) => {
   try {

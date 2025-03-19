@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import Background from './components/Background';
 import AnimatedRoutes from './components/AppContainer';
@@ -9,9 +9,23 @@ const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState('');
 
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+      setIsAuthenticated(true);
+      setUsername(storedUsername);
+    }
+  }, []);
+
   const handleLogin = (user) => {
     setIsAuthenticated(true);
     setUsername(user);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUsername('');
+    localStorage.removeItem('username');
   };
 
   if (!isAuthenticated) {
@@ -35,6 +49,7 @@ const App = () => {
             <Link to="/">Home</Link>
             <Link to="/dashboard/ranking-geral">Ranking Geral</Link>
             <Link to="/dashboard/ranking-por-times">Ranking por Times</Link>
+            <button className="logout-button" onClick={handleLogout}>Logout</button>
           </nav>
         </header>
         <main className="main-content">

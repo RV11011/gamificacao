@@ -206,3 +206,24 @@ body {
   padding: 20px;
   font-size: 20px;
 }
+
+.logout-button {
+  color: #fff;
+  background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(144, 19, 254, 0.1));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.logout-button:hover {
+  background: linear-gradient(135deg, rgba(74, 144, 226, 0.2), rgba(144, 19, 254, 0.2));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}

@@ -4,13 +4,22 @@ import './Login.css';
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aqui você pode adicionar sua lógica de autenticação
-    // Por enquanto vamos apenas simular um login
-    if (username && password) {
-      onLogin(username);
+    const response = await fetch('http://localhost:3001/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      localStorage.setItem('username', data.username);
+      onLogin(data.username);
+    } else {
+      setError('Credenciais inválidas');
     }
   };
 
@@ -37,6 +46,7 @@ const Login = ({ onLogin }) => {
               required
             />
           </div>
+          {error && <p className="error">{error}</p>}
           <button type="submit">Entrar</button>
         </form>
       </div>
