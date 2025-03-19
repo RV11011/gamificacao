@@ -6,9 +6,6 @@ import Login from './Login';
 import Dashboard from './Dashboard';
 import RankingGeral from './RankingGeral';
 import RankingPorTimes from './RankingPorTimes';
-import CartoesMelhoria from './CartoesMelhoria';
-import CartoesFalha from './CartoesFalha';
-import MetricasPessoais from './MetricasPessoais';
 import './AppContainer.css';
 
 const AppContainer = ({ username }) => {
@@ -24,9 +21,6 @@ const AppContainer = ({ username }) => {
             <Route path="/dashboard" element={<Dashboard />}>
               <Route path="ranking-geral" element={<RankingGeral />} />
               <Route path="ranking-por-times" element={<RankingPorTimes />} />
-              <Route path="cartoes-melhoria" element={<CartoesMelhoria />} />
-              <Route path="cartoes-falha" element={<CartoesFalha />} />
-              <Route path="metricas-pessoais" element={<MetricasPessoais />} />
             </Route>
           </Routes>
         </div>

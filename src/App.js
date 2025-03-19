@@ -35,9 +35,6 @@ const App = () => {
             <Link to="/">Home</Link>
             <Link to="/dashboard/ranking-geral">Ranking Geral</Link>
             <Link to="/dashboard/ranking-por-times">Ranking por Times</Link>
-            <Link to="/dashboard/cartoes-melhoria">Cartões de Melhoria</Link>
-            <Link to="/dashboard/cartoes-falha">Cartões de Falha</Link>
-            <Link to="/dashboard/metricas-pessoais">Métricas Pessoais</Link>
           </nav>
         </header>
         <main className="main-content">
