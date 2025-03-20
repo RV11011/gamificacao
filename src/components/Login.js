@@ -8,7 +8,7 @@ const Login = ({ onLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('http://localhost:3001/api/login', {
+    const response = await fetch('http://192.168.14.31:3001/api/login', { // Atualize o endereço IP aqui
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),

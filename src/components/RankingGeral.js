@@ -7,7 +7,7 @@ const RankingGeral = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/ranking-colaboradores');
+        const response = await fetch('http://192.168.14.31:3001/api/ranking-colaboradores'); // Atualize o endereço IP aqui
         const data = await response.json();
         setRankings(data);
       } catch (error) {
