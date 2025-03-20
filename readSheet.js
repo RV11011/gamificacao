@@ -1,14 +1,19 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
 
 // 1. Carregar credenciais
-const credentialsPath = path.join(__dirname, 'service-account.json');
-if (!fs.existsSync(credentialsPath)) {
-  console.error('Arquivo service-account.json não encontrado.');
+const credentials = {
+  client_email: process.env.GOOGLE_CLIENT_EMAIL,
+  private_key: process.env.GOOGLE_PRIVATE_KEY ? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n') : null,
+};
+
+// Verificar se as credenciais estão definidas
+if (!credentials.client_email || !credentials.private_key) {
+  console.error('Credenciais do Google não definidas. Verifique o arquivo .env.');
   process.exit(1);
 }
-const credentials = JSON.parse(fs.readFileSync(credentialsPath));
 
 // 2. Mapeamento completo das colunas (NA ORDEM EXATA DA PLANILHA)
 const CUSTOM_HEADERS = [
@@ -42,13 +47,10 @@ const CUSTOM_HEADERS = [
 
 async function readSheet() {
   try {
-    const doc = new GoogleSpreadsheet('1n01Pj7vZftKbmGW4SoLhankSl1Rqua7zwqqscPhN4ow');
+    const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
     
     // 3. Autenticar
-    await doc.useServiceAccountAuth({
-      client_email: credentials.client_email,
-      private_key: credentials.private_key,
-    });
+    await doc.useServiceAccountAuth(credentials);
     await doc.loadInfo();
 
     // 4. Carregar a aba correta
@@ -76,7 +78,7 @@ async function readSheet() {
     });
 
   } catch (error) {
-    console.error('Erro:', error.message);
+    console.error('Erro ao ler a planilha:', error.message);
   }
 }
 

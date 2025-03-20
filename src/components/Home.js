@@ -1,7 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Home.css';
 
 const Home = ({ username }) => {
+  const [top3, setTop3] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTop3 = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/ranking-colaboradores');
+        const data = await response.json();
+        setTop3(data.slice(0, 3));
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTop3();
+  }, []);
+
   const getGreeting = () => {
     const hour = new Date().getHours();
     
@@ -20,44 +39,21 @@ const Home = ({ username }) => {
         <h1>{getGreeting()}, {username}</h1>
         <p>Bem vindo a Gamificação</p>
       </div>
-      <div className="overview-cards">
-        <div className="overview-card">
-          <div className="icon">
-            <img src="/icons/atendimentos-abertos.png" alt="Atendimentos abertos" className="icon" />
-          </div>
-          <div className="overview-details">
-            <h2>Atendimentos abertos</h2>
-            <p>XX</p>
-          </div>
+      {loading ? (
+        <div className="loading">Carregando...</div>
+      ) : (
+        <div className="podium">
+          {top3.map((user, index) => (
+            <div key={index} className={`podium-place place-${index + 1}`}>
+              <img src={`/images/${user.Atendente}.jpg`} alt={user.Atendente} className="podium-photo" loading="lazy" />
+              <div className="podium-info">
+                <h2>{user.Atendente}</h2>
+                <p>{user.Total} XP</p>
+              </div>
+            </div>
+          ))}
         </div>
-        <div className="overview-card">
-          <div className="icon">
-            <img src="/icons/atendimentos-fila.png" alt="Atendimentos com mais de 10 minutos na fila" className="icon" />
-          </div>
-          <div className="overview-details">
-            <h2>Atendimentos com mais de 10 minutos na fila</h2>
-            <p>XX</p>
-          </div>
-        </div>
-        <div className="overview-card">
-          <div className="icon">
-            <img src="/icons/score-medio.png" alt="Score Médio" className="icon" />
-          </div>
-          <div className="overview-details">
-            <h2>Score Médio</h2>
-            <p>XX</p>
-          </div>
-        </div>
-        <div className="overview-card">
-          <div className="icon">
-            <img src="/icons/finalizados-sem-motivo.png" alt="Finalizados sem motivo informado" className="icon" />
-          </div>
-          <div className="overview-details">
-            <h2>Finalizados sem motivo informado</h2>
-            <p>XX</p>
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

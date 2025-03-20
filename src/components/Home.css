@@ -14,6 +14,7 @@
   font-size: 48px;
   font-weight: 900;
   background: linear-gradient(45deg, #4a90e2, #9013fe);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 15px;
@@ -25,6 +26,81 @@
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 2px;
+}
+
+.loading {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.podium {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.podium-place {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.podium-photo {
+  width: 220px;
+  height: 153px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  object-fit: cover;
+}
+
+.podium-info {
+  background: rgba(42, 47, 51, 0.3);
+  backdrop-filter: blur(10px);
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.place-1 .podium-photo {
+  width: 220px;
+  height: 153px;
+}
+
+.place-2 .podium-photo {
+  width: 220px;
+  height: 153px;
+}
+
+.place-3 .podium-photo {
+  width: 220px;
+  height: 153px;
+}
+
+.podium-info h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.podium-info p {
+  margin: 0;
+  color: #9dabb8;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.sub-greeting {
+  font-size: 14px; /* Diminuir o tamanho da fonte */
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 30px;
+  font-style: italic;
+  font-family: 'Noto Sans', sans-serif; /* Fonte diferente */
+  text-transform: none; /* Remover transformação de texto */
 }
 
 .overview-cards {

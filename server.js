@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const https = require('https');
 
 const app = express();
 const port = 3001; // Porta para o servidor backend
@@ -20,12 +21,10 @@ const users = [
 ];
 
 // Carregar credenciais
-const credentialsPath = path.join(__dirname, 'service-account.json');
-if (!fs.existsSync(credentialsPath)) {
-  console.error('Arquivo service-account.json não encontrado.');
-  process.exit(1);
-}
-const credentials = JSON.parse(fs.readFileSync(credentialsPath));
+const googleCredentials = {
+  client_email: process.env.GOOGLE_CLIENT_EMAIL,
+  private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+};
 
 const CUSTOM_HEADERS = [
   'Data',
@@ -56,25 +55,42 @@ const CUSTOM_HEADERS = [
   'Total'
 ];
 
+const cache = {
+  data: null,
+  timestamp: null,
+  ttl: 60 * 1000 // Tempo de vida do cache em milissegundos (1 minuto)
+};
+
 async function getSheetData() {
-  const doc = new GoogleSpreadsheet('1n01Pj7vZftKbmGW4SoLhankSl1Rqua7zwqqscPhN4ow');
-  await doc.useServiceAccountAuth({
-    client_email: credentials.client_email,
-    private_key: credentials.private_key,
-  });
-  await doc.loadInfo();
+  const now = Date.now();
+  if (cache.data && (now - cache.timestamp < cache.ttl)) {
+    return cache.data;
+  }
 
-  const sheet = doc.sheetsByTitle['Cálculo de XP'];
-  if (!sheet) throw new Error('Aba não encontrada');
+  try {
+    const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
+    await doc.useServiceAccountAuth(googleCredentials);
+    await doc.loadInfo();
 
-  const rows = await sheet.getRows();
-  return rows.map(row => {
-    const registro = {};
-    CUSTOM_HEADERS.forEach((header, colIndex) => {
-      registro[header] = row._rawData[colIndex] || 'N/D';
+    const sheet = doc.sheetsByTitle['Cálculo de XP'];
+    if (!sheet) throw new Error('Aba não encontrada');
+
+    const rows = await sheet.getRows();
+    const data = rows.map(row => {
+      const registro = {};
+      CUSTOM_HEADERS.forEach((header, colIndex) => {
+        registro[header] = row._rawData[colIndex] || 'N/D';
+      });
+      return registro;
     });
-    return registro;
-  });
+
+    cache.data = data;
+    cache.timestamp = now;
+    return data;
+  } catch (error) {
+    console.error('Erro ao obter dados da planilha:', error.message);
+    throw error;
+  }
 }
 
 // Rota para login
@@ -134,6 +150,29 @@ app.get('/api/ranking-times', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Servidor backend rodando em http://localhost:${port}`);
-});
+// Carregar certificados SSL
+const privateKeyPath = 'path/to/your/private.key';
+const certificatePath = 'path/to/your/certificate.crt';
+const caPath = 'path/to/your/ca_bundle.crt';
+
+if (fs.existsSync(privateKeyPath) && fs.existsSync(certificatePath) && fs.existsSync(caPath)) {
+  const privateKey = fs.readFileSync(privateKeyPath, 'utf8');
+  const certificate = fs.readFileSync(certificatePath, 'utf8');
+  const ca = fs.readFileSync(caPath, 'utf8');
+
+  const credentials = {
+    key: privateKey,
+    cert: certificate,
+    ca: ca
+  };
+
+  const httpsServer = https.createServer(credentials, app);
+
+  httpsServer.listen(port, () => {
+    console.log(`Servidor backend rodando em https://localhost:${port}`);
+  });
+} else {
+  app.listen(port, () => {
+    console.log(`Servidor backend rodando em http://localhost:${port}`);
+  });
+}
