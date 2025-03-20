@@ -32,7 +32,12 @@ const RankingPorTimes = () => {
         <tbody>
           {rankings.map((team, index) => (
             <tr key={team.department} className={index === 0 ? 'top-rank' : ''}>
-              <td>{index + 1}</td>
+              <td>
+                {index === 0 && <i className="fas fa-crown star-icon"></i>}
+                {index === 1 && <i className="fas fa-medal star-icon" style={{ color: '#C0C0C0' }}></i>}
+                {index === 2 && <i className="fas fa-medal star-icon" style={{ color: '#CD7F32' }}></i>}
+                {index + 1}
+              </td>
               <td>{team.department}</td>
               <td>{team.xp} XP</td>
             </tr>

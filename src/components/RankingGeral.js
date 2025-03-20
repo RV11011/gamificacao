@@ -32,7 +32,12 @@ const RankingGeral = () => {
         <tbody>
           {rankings.map((user, index) => (
             <tr key={index} className={index === 0 ? 'top-rank' : ''}>
-              <td>{index + 1}</td>
+              <td>
+                {index === 0 && <i className="fas fa-crown star-icon"></i>}
+                {index === 1 && <i className="fas fa-medal star-icon" style={{ color: '#C0C0C0' }}></i>}
+                {index === 2 && <i className="fas fa-medal star-icon" style={{ color: '#CD7F32' }}></i>}
+                {index + 1}
+              </td>
               <td>{user.Atendente}</td>
               <td>{user.Total} XP</td>
             </tr>

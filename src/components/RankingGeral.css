@@ -1,23 +1,22 @@
 .ranking-container {
   width: 100%;
   max-width: 1200px;
-  background: rgba(42, 47, 51, 0.3);
-  backdrop-filter: blur(10px);
+  background: linear-gradient(135deg, #2a2f33 0%, #1c2126 100%);
   padding: 40px;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  border: 1px solid #3c4753;
   margin-top: 30px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s;
 }
 
 .ranking-container:hover {
-  transform: translateY(-5px); /* Efeito de hover */
+  transform: translateY(-5px);
 }
 
 .ranking-container h2 {
-  margin-bottom: 20px; 
-  font-size: 28px; 
+  margin-bottom: 20px;
+  font-size: 28px;
   font-weight: 700;
   text-align: center;
   color: #ffffff;
@@ -34,9 +33,9 @@
 }
 
 .ranking-table th, .ranking-table td {
-  padding: 20px; /* Maior espaçamento interno */
+  padding: 20px;
   border-bottom: 1px solid #3c4753;
-  font-size: 20px; 
+  font-size: 20px;
   font-weight: 500;
 }
 
@@ -54,13 +53,13 @@
 }
 
 .top-rank td {
-  color: #ffff00; 
+  color: #ffff00;
   font-weight: bold;
-  font-size: 22px; /* Aumentar fonte para o primeiro */
+  font-size: 22px;
 }
 
 .star-icon {
-  color: #ffd700;  
-  margin-right: 8px; 
-  font-size: 24px; /* Aumentar ícone */
+  color: #ffd700;
+  margin-right: 8px;
+  font-size: 24px;
 }
