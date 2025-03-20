@@ -4,12 +4,12 @@
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: 0; /* Alterado para estar acima do background mas abaixo do conteúdo */
 }
 
 .app-container {
   position: relative;
-  z-index: 2;
+  z-index: 1; /* Garante que o conteúdo fique acima dos backgrounds */
 }
 
 .background-effect {
@@ -18,7 +18,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
+  z-index: -2; /* Alterado para estar atrás de tudo */
   background: linear-gradient(45deg, #0a0f18, #1a1f2e);
   overflow: hidden;
 }
@@ -43,6 +43,8 @@
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: -1; /* Alterado para estar entre o background e o conteúdo */
+  opacity: 0.5; /* Reduzido para ficar mais sutil */
   background-image: 
     radial-gradient(circle at 20% 20%, rgba(74, 144, 226, 0.05) 0%, transparent 50px),
     radial-gradient(circle at 80% 80%, rgba(144, 19, 254, 0.05) 0%, transparent 50px),
@@ -95,4 +97,4 @@
   z-index: -1;
   opacity: 0.05;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-} 
+}

@@ -14,6 +14,9 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  position: relative;
+  z-index: 1;
+  background: transparent; /* Removido background escuro */
 }
 
 .dashboard-header {
@@ -77,6 +80,11 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 1;
+  margin-left: 260px;
+  padding: 0 20px;
+  z-index: 2; /* Aumentado para garantir visibilidade */
+  background: transparent;
 }
 
 .cards-container {
@@ -219,11 +227,33 @@ body {
   transition: all 0.3s ease;
   text-decoration: none;
   display: inline-block;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
 }
 
 .logout-button:hover {
-  background: linear-gradient(135deg, rgba(74, 144, 226, 0.2), rgba(144, 19, 254, 0.2));
+  background: rgba(239, 68, 68, 0.2);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.logout-button i {
+  font-size: 16px;
+}
+
+/* Ajuste a opacidade do backdrop-filter */
+.glass-card {
+  background: rgba(30, 41, 59, 0.3); /* Reduzido opacity */
+  backdrop-filter: blur(8px);
+  /* ... resto do código ... */
 }

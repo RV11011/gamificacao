@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
+import Sidebar from './components/Sidebar';
 import Background from './components/Background';
 import AnimatedRoutes from './components/AppContainer';
 import Login from './components/Login';
+import ParticlesBackground from './components/ParticlesBackground';
 import './App.css';
 
 const App = () => {
@@ -31,6 +33,7 @@ const App = () => {
   if (!isAuthenticated) {
     return (
       <div className="app-container">
+        <ParticlesBackground />
         <Background />
         <Login onLogin={handleLogin} />
       </div>
@@ -40,21 +43,16 @@ const App = () => {
   return (
     <Router>
       <div className="app-container">
+        <ParticlesBackground />
         <Background />
-        <header className="dashboard-header">
-          <div className="header-left">
-            <h2 className="dashboard-title">Gamificação</h2>
-          </div>
-          <nav className="dashboard-nav">
-            <Link to="/">Home</Link>
-            <Link to="/dashboard/ranking-geral">Ranking Geral</Link>
-            <Link to="/dashboard/ranking-por-times">Ranking por Times</Link>
-            <button className="logout-button" onClick={handleLogout}>Logout</button>
-          </nav>
-        </header>
-        <main className="main-content">
+        <Sidebar />
+        <div className="main-content">
+          <button className="logout-button" onClick={handleLogout}>
+            <i className="fas fa-sign-out-alt"></i>
+            Logout
+          </button>
           <AnimatedRoutes username={username} />
-        </main>
+        </div>
       </div>
     </Router>
   );

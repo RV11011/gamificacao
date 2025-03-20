@@ -18,3 +18,47 @@
   text-align: center;
   margin-bottom: 30px;
 }
+
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.dashboard-sidebar {
+  width: 260px;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  padding: 20px;
+}
+
+.sidebar-header {
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.logo-image {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 15px;
+  object-fit: contain;
+}
+
+.sidebar-header h1 {
+  font-size: 24px;
+  background: linear-gradient(45deg, #6366f1, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+}
+
+.dashboard-main {
+  flex: 1;
+  margin-left: 260px;
+  padding: 20px;
+}

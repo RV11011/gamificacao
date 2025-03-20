@@ -1,0 +1,13 @@
+:root {
+  /* Cores Principais */
+  --primary: #6366f1;
+  --secondary: #3b82f6;
+  
+  /* Backgrounds */
+  --bg-dark: #0a0e17;
+  --bg-card: rgba(30, 41, 59, 0.5);
+  
+  /* Textos */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+}

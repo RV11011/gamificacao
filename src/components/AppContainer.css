@@ -1,7 +1,7 @@
 /* Transição de Fade */
 .fade-enter {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   
   .fade-enter-active {
@@ -17,7 +17,7 @@
   
   .fade-exit-active {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
     transition: opacity 300ms, transform 300ms;
   }
   
@@ -104,8 +104,8 @@
   }
   
   .home-container {
-    text-align: center;
-    padding: 50px 20px;
+    display: grid;
+    padding: 0px 20px;
     width: 100%;
   }
   
@@ -236,4 +236,12 @@
     color: #ffd700;
     margin-right: 8px;
     font-size: 24px;
+  }
+
+  .route-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    position: relative;
   }

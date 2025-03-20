@@ -1,124 +1,74 @@
 import React from 'react';
-import { useCallback } from "react";
 import Particles from "react-tsparticles";
-import { loadSlim } from "tsparticles-slim";
 
 const ParticlesBackground = () => {
-    const particlesInit = useCallback(async engine => {
-        await loadSlim(engine);
-    }, []);
-
-    return (
-        <Particles
-            id="tsparticles"
-            init={particlesInit}
-            options={{
-                particles: {
-                    number: {
-                        value: 20,
-                        density: {
-                            enable: true,
-                            value_area: 800
-                        }
-                    },
-                    color: {
-                        value: "#8214ff"
-                    },
-                    shape: {
-                        type: "circle",
-                        stroke: {
-                            width: 0,
-                            color: "#000000"
-                        },
-                        polygon: {
-                            nb_sides: 5
-                        }
-                    },
-                    opacity: {
-                        value: 0.5,
-                        random: false,
-                        anim: {
-                            enable: false,
-                            speed: 1,
-                            opacity_min: 0.1,
-                            sync: false
-                        }
-                    },
-                    size: {
-                        value: 3,
-                        random: true,
-                        anim: {
-                            enable: false,
-                            speed: 40,
-                            size_min: 0.1,
-                            sync: false
-                        }
-                    },
-                    line_linked: {
-                        enable: true,
-                        distance: 150,
-                        color: "#ffffff",
-                        opacity: 0.4,
-                        width: 1
-                    },
-                    move: {
-                        enable: true,
-                        speed: 6,
-                        direction: "none",
-                        random: true,
-                        straight: false,
-                        out_mode: "out",
-                        bounce: false,
-                        attract: {
-                            enable: false,
-                            rotateX: 600,
-                            rotateY: 1200
-                        }
-                    }
-                },
-                interactivity: {
-                    detect_on: "window",
-                    events: {
-                        onhover: {
-                            enable: true,
-                            mode: "repulse"
-                        },
-                        onclick: {
-                            enable: true,
-                            mode: "push"
-                        },
-                        resize: true
-                    },
-                    modes: {
-                        grab: {
-                            distance: 400,
-                            line_linked: {
-                                opacity: 1
-                            }
-                        },
-                        bubble: {
-                            distance: 400,
-                            size: 40,
-                            duration: 2,
-                            opacity: 8,
-                            speed: 3
-                        },
-                        repulse: {
-                            distance: 200,
-                            duration: 0.4
-                        },
-                        push: {
-                            particles_nb: 4
-                        },
-                        remove: {
-                            particles_nb: 2
-                        }
-                    }
-                },
-                retina_detect: true
-            }}
-        />
-    );
+  return (
+    <Particles
+      options={{
+        background: {
+          color: "transparent", // Alterado para transparente
+        },
+        particles: {
+          number: {
+            value: 50, // Reduzido número de partículas
+            density: { enable: true, value_area: 800 }
+          },
+          color: {
+            value: ["#6366f1", "#3b82f6", "#8b5cf6"]
+          },
+          shape: {
+            type: "circle"
+          },
+          opacity: {
+            value: 0.3, // Reduzido opacidade
+            random: true
+          },
+          size: {
+            value: 3,
+            random: { enable: true, minimumValue: 1 }
+          },
+          links: {
+            enable: true,
+            distance: 150,
+            color: "#4a5568",
+            opacity: 0.4,
+            width: 1
+          },
+          move: {
+            enable: true,
+            speed: 2,
+            direction: "none",
+            random: true,
+            straight: false,
+            outModes: "out"
+          }
+        },
+        interactivity: {
+          events: {
+            onHover: {
+              enable: true,
+              mode: "grab"
+            },
+            onClick: {
+              enable: true,
+              mode: "push"
+            }
+          },
+          modes: {
+            grab: {
+              distance: 140,
+              links: {
+                opacity: 1
+              }
+            },
+            push: {
+              quantity: 4
+            }
+          }
+        }
+      }}
+    />
+  );
 };
 
-export default ParticlesBackground; 
+export default ParticlesBackground;
