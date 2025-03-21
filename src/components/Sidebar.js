@@ -24,6 +24,10 @@ const Sidebar = () => {
           <i className="fas fa-users"></i>
           <span>Times</span>
         </Link>
+        <Link to="/dashboard/calculo-xp" className={`nav-item ${location.pathname === '/dashboard/calculo-xp' ? 'active' : ''}`}>
+          <i className="fas fa-chart-line"></i>
+          <span>Cálculo de XP</span>
+        </Link>
       </nav>
     </aside>
   );

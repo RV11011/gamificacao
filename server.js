@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const https = require('https');
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
+const { setupPersonalMetricsRoutes } = require('./readPersonalMetrics');
 
 const app = express();
 const port = 3001; // Porta para o servidor backend
@@ -135,7 +136,62 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// Nova rota para obter métricas pessoais
+// Atualizar a rota de métricas pessoais para usar o username correto
+app.get('/api/personal-metrics/:atendente', async (req, res) => {
+  try {
+    const data = await getSheetData();
+    const userMetrics = data.find(row => 
+      // Compara com o nome completo do atendente
+      row.Atendente === req.params.atendente
+    );
+
+    if (userMetrics) {
+      res.json({
+        atendente: userMetrics.Atendente,
+        funcao: userMetrics.Função,
+        metricas: {
+          atendimentos: {
+            total: parseInt(userMetrics.Atendimentos) || 0,
+            tmf: parseInt(userMetrics.TMF) || 0,
+            tma: parseInt(userMetrics.TMA) || 0
+          },
+          implantacoes: parseInt(userMetrics.Implantações) || 0,
+          qualidade: {
+            errosDocumentacao: parseInt(userMetrics['Erros de Documentação']) || 0,
+            sla: parseInt(userMetrics['SLA no Prazo']) || 0,
+            mediaScore: parseInt(userMetrics['Média Score']) || 0,
+            taxaAvaliacao: parseInt(userMetrics['Taxa de Avaliação']) || 0,
+            notasJustas: parseInt(userMetrics['Notas Justas']) || 0
+          },
+          problemas: {
+            comportamentais: parseInt(userMetrics['Problemas Comportamentais']) || 0,
+            tecnicos: parseInt(userMetrics['Problemas Técnicos']) || 0,
+            criticos: parseInt(userMetrics['Problemas Críticos']) || 0
+          },
+          desenvolvimento: {
+            treinamentosParticipados: parseInt(userMetrics['Treinamento participado']) || 0,
+            treinamentosRealizados: parseInt(userMetrics['Treinamento realizado']) || 0,
+            projetos: parseInt(userMetrics['Projetos/Desafios']) || 0,
+            pdis: parseInt(userMetrics.PDIs) || 0
+          },
+          cartoes: {
+            falha: parseInt(userMetrics['Cartões de Falha']) || 0,
+            melhoria: parseInt(userMetrics['Cartões de Melhoria']) || 0,
+            tarefa: parseInt(userMetrics['Cartões de Tarefa']) || 0
+          },
+          ajusteGM: parseInt(userMetrics['Ajuste do GM']) || 0,
+          totalXP: parseInt(userMetrics.Total) || 0
+        }
+      });
+    } else {
+      res.status(404).json({ error: 'Colaborador não encontrado' });
+    }
+  } catch (error) {
+    console.error('Erro ao buscar métricas pessoais:', error);
+    res.status(500).json({ error: 'Erro ao buscar métricas pessoais' });
+  }
+});
+
 app.get('/api/metrics/:userId', async (req, res) => {
   const { userId } = req.params;
   
@@ -206,6 +262,9 @@ app.get('/api/ranking-times', async (req, res) => {
     res.status(500).send('Erro ao buscar dados da planilha');
   }
 });
+
+// Adicionar rotas de métricas pessoais
+setupPersonalMetricsRoutes(app);
 
 // Carregar certificados SSL
 const privateKeyPath = 'path/to/your/private.key';

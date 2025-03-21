@@ -1,0 +1,61 @@
+.personal-metrics {
+  padding: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas fixas */
+  gap: 25px;
+  margin-top: 30px;
+  justify-content: center;
+}
+
+.metric-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  min-height: 200px;
+  text-align: left;
+}
+
+.metric-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.metric-card h3 {
+  color: #fff;
+  margin-bottom: 20px;
+  font-size: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 10px;
+}
+
+.metric-card p {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 12px 0;
+  font-size: 16px;
+}
+
+.xp-total {
+  font-size: 28px !important;
+  font-weight: bold;
+  color: #6366f1 !important;
+  text-align: center;
+}
+
+.loading, .error, .no-metrics {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 20px;
+}

@@ -16,11 +16,10 @@ const Login = ({ onLogin }) => {
 
     if (response.ok) {
       const data = await response.json();
-      // Pegar apenas o primeiro e segundo nome
-      const names = data.full_name.split(' ');
-      const displayName = `${names[0]} ${names[1]}`;
-      localStorage.setItem('username', displayName);
-      onLogin(displayName);
+      // Guardar o nome completo do atendente
+      localStorage.setItem('fullName', data.full_name);
+      localStorage.setItem('dbUsername', data.username); // Guardar o username do banco
+      onLogin(data.full_name);
     } else {
       setError('Credenciais inválidas');
     }
