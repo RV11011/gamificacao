@@ -1,6 +1,4 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
-const fs = require('fs');
-const path = require('path');
 require('dotenv').config();
 
 // 1. Carregar credenciais
@@ -21,6 +19,7 @@ const CUSTOM_HEADERS = [
   'Combinação',
   'Departamento',
   'Atendente',
+  'Classe',
   'Função',
   'Atendimentos',
   'TMF',
@@ -33,14 +32,15 @@ const CUSTOM_HEADERS = [
   'Notas Justas',
   'Problemas Comportamentais',
   'Problemas Técnicos',
-  'Problemas Críticos',
-  'Treinamento participado',
-  'Treinamento realizado',
-  'Projetos/Desafios',
-  'PDIs',
   'Cartões de Falha',
   'Cartões de Melhoria',
   'Cartões de Tarefa',
+  'Inconsistências no Ponto',
+  'Treinamento participado',
+  'Treinamento realizado',
+  'PDIs',
+  'Projetos',
+  'Desafios',
   'Ajuste do GM',
   'Total'
 ];
@@ -60,26 +60,42 @@ async function readSheet() {
     // 5. Ler todas as linhas brutas
     const rows = await sheet.getRows();
 
-    // 6. Processar cada linha com o mapeamento correto
-    console.log('\n=== DADOS COMPLETOS DA PLANILHA ===');
-    rows.forEach((row, index) => {
+    // 6. Processar cada linha com o mapeamento correto e agrupar por atendente
+    const atendentes = {};
+
+    rows.forEach((row) => {
       const registro = {};
       CUSTOM_HEADERS.forEach((header, colIndex) => {
         registro[header] = row._rawData[colIndex] || 'N/D';
       });
-      
+
+      const atendente = registro.Atendente;
+      if (!atendentes[atendente]) {
+        atendentes[atendente] = {
+          ...registro,
+          Total: parseInt(registro.Total) || 0
+        };
+      } else {
+        atendentes[atendente].Total += parseInt(registro.Total) || 0;
+      }
+    });
+
+    console.log('\n=== DADOS AGRUPADOS POR ATENDENTE ===');
+    Object.keys(atendentes).forEach((atendente, index) => {
       console.log(`\nRegistro #${index + 1}:`);
-      console.log('Atendente:', registro.Atendente);
+      console.log('Atendente:', atendente);
       console.log('Detalhes:', {
-        Data: registro.Data,
-        Departamento: registro.Departamento,
-        Total: registro.Total
+        Data: atendentes[atendente].Data,
+        Departamento: atendentes[atendente].Departamento,
+        Total: atendentes[atendente].Total
       });
     });
+
+    return atendentes;
 
   } catch (error) {
     console.error('Erro ao ler a planilha:', error.message);
   }
 }
 
-readSheet();
+module.exports = readSheet;

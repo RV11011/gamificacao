@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const https = require('https');
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
-const { setupPersonalMetricsRoutes } = require('./readPersonalMetrics');
+const readSheet = require('./readSheet');
 
 const app = express();
 const port = 3001; // Porta para o servidor backend
@@ -31,79 +31,6 @@ const users = [
   { username: process.env.USER2_USERNAME, password: process.env.USER2_PASSWORD },
   { username: process.env.USER3_USERNAME, password: process.env.USER3_PASSWORD }
 ];
-
-// Carregar credenciais
-const googleCredentials = {
-  client_email: process.env.GOOGLE_CLIENT_EMAIL,
-  private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-};
-
-const CUSTOM_HEADERS = [
-  'Data',
-  'Combinação',
-  'Departamento',
-  'Atendente',
-  'Função',
-  'Atendimentos',
-  'TMF',
-  'TMA',
-  'Implantações',
-  'Erros de Documentação',
-  'SLA no Prazo',
-  'Média Score',
-  'Taxa de Avaliação',
-  'Notas Justas',
-  'Problemas Comportamentais',
-  'Problemas Técnicos',
-  'Problemas Críticos',
-  'Treinamento participado',
-  'Treinamento realizado',
-  'Projetos/Desafios',
-  'PDIs',
-  'Cartões de Falha',
-  'Cartões de Melhoria',
-  'Cartões de Tarefa',
-  'Ajuste do GM',
-  'Total'
-];
-
-const cache = {
-  data: null,
-  timestamp: null,
-  ttl: 60 * 1000 // Tempo de vida do cache em milissegundos (1 minuto)
-};
-
-async function getSheetData() {
-  const now = Date.now();
-  if (cache.data && (now - cache.timestamp < cache.ttl)) {
-    return cache.data;
-  }
-
-  try {
-    const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
-    await doc.useServiceAccountAuth(googleCredentials);
-    await doc.loadInfo();
-
-    const sheet = doc.sheetsByTitle['Cálculo de XP'];
-    if (!sheet) throw new Error('Aba não encontrada');
-
-    const rows = await sheet.getRows();
-    const data = rows.map(row => {
-      const registro = {};
-      CUSTOM_HEADERS.forEach((header, colIndex) => {
-        registro[header] = row._rawData[colIndex] || 'N/D';
-      });
-      return registro;
-    });
-
-    cache.data = data;
-    cache.timestamp = now;
-    return data;
-  } catch (error) {
-    console.error('Erro ao obter dados da planilha:', error.message);
-    throw error;
-  }
-}
 
 // Modificar a rota de login
 app.post('/api/login', async (req, res) => {
@@ -139,11 +66,8 @@ app.post('/api/login', async (req, res) => {
 // Atualizar a rota de métricas pessoais para usar o username correto
 app.get('/api/personal-metrics/:atendente', async (req, res) => {
   try {
-    const data = await getSheetData();
-    const userMetrics = data.find(row => 
-      // Compara com o nome completo do atendente
-      row.Atendente === req.params.atendente
-    );
+    const data = await readSheet();
+    const userMetrics = data[req.params.atendente];
 
     if (userMetrics) {
       res.json({
@@ -192,46 +116,10 @@ app.get('/api/personal-metrics/:atendente', async (req, res) => {
   }
 });
 
-app.get('/api/metrics/:userId', async (req, res) => {
-  const { userId } = req.params;
-  
-  try {
-    const data = await getSheetData();
-    const userMetrics = data.find(row => row.Atendente === req.query.username);
-    
-    if (userMetrics) {
-      res.json({
-        xp: userMetrics.Total,
-        department: userMetrics.Departamento,
-        metrics: {
-          atendimentos: userMetrics.Atendimentos,
-          implantacoes: userMetrics.Implantações,
-          mediaScore: userMetrics['Média Score'],
-          sla: userMetrics['SLA no Prazo']
-        }
-      });
-    } else {
-      res.status(404).json({ error: 'Usuário não encontrado' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'Erro ao buscar métricas' });
-  }
-});
-
-app.get('/api/data', async (req, res) => {
-  try {
-    const data = await getSheetData();
-    res.json(data);
-  } catch (error) {
-    console.error('Erro ao buscar dados da planilha:', error);
-    res.status(500).send('Erro ao buscar dados da planilha');
-  }
-});
-
 app.get('/api/ranking-colaboradores', async (req, res) => {
   try {
-    const data = await getSheetData();
-    const sortedData = data.sort((a, b) => parseInt(b.Total, 10) - parseInt(a.Total, 10));
+    const data = await readSheet();
+    const sortedData = Object.values(data).sort((a, b) => b.Total - a.Total);
     res.json(sortedData);
   } catch (error) {
     console.error('Erro ao buscar dados da planilha:', error);
@@ -241,8 +129,8 @@ app.get('/api/ranking-colaboradores', async (req, res) => {
 
 app.get('/api/ranking-times', async (req, res) => {
   try {
-    const data = await getSheetData();
-    const departmentXP = data.reduce((acc, row) => {
+    const data = await readSheet();
+    const departmentXP = Object.values(data).reduce((acc, row) => {
       const department = row.Departamento;
       const xp = parseInt(row.Total, 10) || 0;
       if (!acc[department]) {
@@ -262,9 +150,6 @@ app.get('/api/ranking-times', async (req, res) => {
     res.status(500).send('Erro ao buscar dados da planilha');
   }
 });
-
-// Adicionar rotas de métricas pessoais
-setupPersonalMetricsRoutes(app);
 
 // Carregar certificados SSL
 const privateKeyPath = 'path/to/your/private.key';
