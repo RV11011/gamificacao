@@ -4,6 +4,26 @@ import './Home.css';
 const Home = ({ username }) => {
   const [top3, setTop3] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    // Buscar dados do usuário logado
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('http://192.168.14.31:3001/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username })
+        });
+        const data = await response.json();
+        setUserData(data);
+      } catch (error) {
+        console.error('Erro ao buscar dados do usuário:', error);
+      }
+    };
+
+    fetchUserData();
+  }, [username]);
 
   useEffect(() => {
     const fetchTop3 = async () => {
@@ -28,12 +48,15 @@ const Home = ({ username }) => {
     return "Boa noite";
   };
 
+  // Usar o nome completo do usuário se disponível, caso contrário usar o username
+  const displayName = userData?.full_name || username;
+
   return (
     <div className="home-container fade-in">
       <img src="/logo.png" alt="Logo Gamificação" className="main-logo pulse" />
       
       <div className="greeting">
-        <h1 className="greeting-text">{getGreeting()}, {username}</h1>
+        <h1 className="greeting-text">{getGreeting()}, {displayName}</h1>
         <p className="welcome-text">Bem vindo à Gamificação</p>
       </div>
 

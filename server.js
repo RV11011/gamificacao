@@ -6,12 +6,23 @@ const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const https = require('https');
+const { Pool } = require('pg');
+const bcrypt = require('bcrypt');
 
 const app = express();
 const port = 3001; // Porta para o servidor backend
 
 app.use(cors()); // Permitir requisições CORS
 app.use(bodyParser.json()); // Parse JSON bodies
+
+// Configuração do pool de conexões PostgreSQL
+const pool = new Pool({
+  user: 'gamificacao_user',
+  password: 'gamificacao_password',
+  host: 'localhost',
+  database: 'gamificacao_db',
+  port: 5432
+});
 
 // Usuários predefinidos
 const users = [
@@ -93,15 +104,61 @@ async function getSheetData() {
   }
 }
 
-// Rota para login
-app.post('/api/login', (req, res) => {
+// Modificar a rota de login
+app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
-  const user = users.find(u => u.username === username && u.password === password);
+  
+  try {
+    const result = await pool.query(
+      'SELECT id, username, password, full_name, department, role FROM users WHERE username = $1',
+      [username]
+    );
 
-  if (user) {
-    res.status(200).json({ username: user.username });
-  } else {
-    res.status(401).send('Credenciais inválidas');
+    const user = result.rows[0];
+
+    if (user && await bcrypt.compare(password, user.password)) {
+      // Atualizar último login
+      await pool.query(
+        'UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1',
+        [user.id]
+      );
+
+      // Remover senha antes de enviar
+      delete user.password;
+      res.json(user);
+    } else {
+      res.status(401).json({ error: 'Credenciais inválidas' });
+    }
+  } catch (error) {
+    console.error('Erro no login:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+// Nova rota para obter métricas pessoais
+app.get('/api/metrics/:userId', async (req, res) => {
+  const { userId } = req.params;
+  
+  try {
+    const data = await getSheetData();
+    const userMetrics = data.find(row => row.Atendente === req.query.username);
+    
+    if (userMetrics) {
+      res.json({
+        xp: userMetrics.Total,
+        department: userMetrics.Departamento,
+        metrics: {
+          atendimentos: userMetrics.Atendimentos,
+          implantacoes: userMetrics.Implantações,
+          mediaScore: userMetrics['Média Score'],
+          sla: userMetrics['SLA no Prazo']
+        }
+      });
+    } else {
+      res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar métricas' });
   }
 });
 

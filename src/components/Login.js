@@ -8,7 +8,7 @@ const Login = ({ onLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('http://192.168.14.31:3001/api/login', { // Atualize o endereço IP aqui
+    const response = await fetch('http://192.168.14.31:3001/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
@@ -16,8 +16,11 @@ const Login = ({ onLogin }) => {
 
     if (response.ok) {
       const data = await response.json();
-      localStorage.setItem('username', data.username);
-      onLogin(data.username);
+      // Pegar apenas o primeiro e segundo nome
+      const names = data.full_name.split(' ');
+      const displayName = `${names[0]} ${names[1]}`;
+      localStorage.setItem('username', displayName);
+      onLogin(displayName);
     } else {
       setError('Credenciais inválidas');
     }
