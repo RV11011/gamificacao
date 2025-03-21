@@ -1,0 +1,164 @@
+/* filepath: /home/ixcsoft/Área de trabalho/Projeto/gamificacao-ixc/src/components/LojaDeTroca.css */
+.loja-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.loja-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.loja-container ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.recompensas {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.recompensa {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.recompensa:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.recompensa h3 {
+  margin-top: 0;
+}
+
+.recompensa ul {
+  list-style-type: none;
+  padding-left: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.recompensa ul li {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.recompensa ul li img {
+  width: 150px !important;
+  height: 150px !important;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.recompensa ul li i {
+  font-size: 24px;
+  margin-right: 10px;
+  color: #ffd700;
+}
+
+.trophy-icon {
+  font-size: 64px;
+  color: #ffd700;
+  display: block;
+  margin: 20px auto;
+  text-align: center;
+}
+
+.fa-certificate {
+  color: #4a90e2;
+}
+
+.fa-border-all {
+  color: #9013fe;
+}
+
+.fa-medal {
+  color: #ffd700;
+}
+
+.recompensa img {
+  width: 100px;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+.trofeu-img {
+  width: 250px !important; /* Reduzido de 300px para 250px */
+  height: auto !important;
+  display: block;
+  margin: 40px auto;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+  max-width: none !important; /* Impedir limitação de largura máxima */
+  object-fit: contain; /* Garantir que a imagem mantenha suas proporções */
+}
+
+/* Sobrescrever qualquer outra classe que possa estar afetando */
+.recompensa img.trofeu-img {
+  width: 350px !important; /* Reduzido de 400px para 350px */
+  height: auto !important;
+}
+
+.trofeu-img:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 30px rgba(255, 215, 0, 1));
+}
+
+/* Estilo para os broches */
+.broche-img {
+  width: 150px !important; /* Aumentado de 100px para 150px */
+  height: auto !important;
+  margin: 0 15px 20px !important; /* Adicionado margin-bottom para espaçar a imagem da legenda */
+  transition: all 0.3s ease;
+  border-radius: 12px; /* Adicionado bordas arredondadas */
+  display: block; /* Garantir que a imagem seja um bloco */
+}
+
+.broche-img:hover {
+  transform: scale(1.15); /* Aumentado o fator de escala no hover */
+  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+}
+
+/* Estilo para as molduras */
+.moldura-img {
+  width: 150px !important; /* Aumentado de 100px para 150px */
+  height: auto !important;
+  margin: 0 15px 20px !important; /* Adicionado margin-bottom para espaçar a imagem da legenda */
+  transition: all 0.3s ease;
+  border-radius: 12px; /* Adicionado bordas arredondadas */
+  display: block; /* Garantir que a imagem seja um bloco */
+}
+
+.moldura-img:hover {
+  transform: scale(1.15); /* Aumentado o fator de escala no hover */
+  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+}
+
+/* Estilo para as insígnias */
+.insignia-img {
+  width: 150px !important; /* Aumentado de 100px para 150px */
+  height: auto !important;
+  margin: 0 15px 20px !important; /* Adicionado margin-bottom para espaçar a imagem da legenda */
+  transition: all 0.3s ease;
+  border-radius: 12px; /* Adicionado bordas arredondadas */
+  display: block; /* Garantir que a imagem seja um bloco */
+}
+
+.insignia-img:hover {
+  transform: scale(1.15); /* Aumentado o fator de escala no hover */
+  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+}

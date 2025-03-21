@@ -28,6 +28,10 @@ const Sidebar = () => {
           <i className="fas fa-chart-line"></i>
           <span>Cálculo de XP</span>
         </Link>
+        <Link to="/dashboard/loja-de-troca" className={`nav-item ${location.pathname === '/dashboard/loja-de-troca' ? 'active' : ''}`}>
+          <i className="fas fa-store"></i>
+          <span>Loja de Troca</span>
+        </Link>
       </nav>
     </aside>
   );
