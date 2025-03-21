@@ -65,10 +65,8 @@ const Home = ({ username }) => {
       ) : (
         <div className="ranking-section">
           <div className="ranking-header">
-            <div className="ranking-title">
-              <i className="fas fa-chart-line"></i>
+            <div className="">
               <h2>Ranking do Momento</h2>
-              <span className="update-badge">Tempo Real</span>
             </div>
           </div>
           
@@ -125,5 +123,33 @@ const Home = ({ username }) => {
     </div>
   );
 }
+
+const QuickStats = () => {
+  return (
+    <div className="quick-stats">
+      <div className="stat-card">
+        <i className="fas fa-chart-line"></i>
+        <div className="stat-info">
+          <h3>Posição no Ranking</h3>
+          <p>#12</p>
+        </div>
+      </div>
+      <div className="stat-card">
+        <i className="fas fa-trophy"></i>
+        <div className="stat-info">
+          <h3>XP Total</h3>
+          <p>1,234</p>
+        </div>
+      </div>
+      <div className="stat-card">
+        <i className="fas fa-medal"></i>
+        <div className="stat-info">
+          <h3>Insígnias</h3>
+          <p>5/12</p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default Home;

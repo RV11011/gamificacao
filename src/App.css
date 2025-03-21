@@ -72,7 +72,7 @@ body {
 .main-content {
   position: relative;
   min-height: 100vh;
-  width: 100%;
+  /* width: 100%; */
   max-width: 1200px;
   min-width: 1000px;
   margin: 0 auto;
@@ -145,11 +145,11 @@ body {
 
 /* Garante que os componentes ocupem toda a largura disponível */
 .route-section {
-  width: 100%;
-  min-width: 1000px;
-  display: flex;
-  justify-content: center;
-  box-sizing: border-box;
+  /* width: 100%; */
+  /* min-width: 1000px; */
+  /* display: flex; */
+  /* justify-content: center; */
+  /* box-sizing: border-box; */
 }
 
 /* Previne redimensionamento dos containers */
@@ -157,7 +157,7 @@ body {
 .cards-container,
 .home-container {
   width: 100%;
-  max-width: 1200px;
+  /* max-width: 1200px; */
   margin: 0 auto;
   box-sizing: border-box;
 }

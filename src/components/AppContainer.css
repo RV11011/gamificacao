@@ -110,7 +110,7 @@
   }
   
   .greeting {
-    margin-bottom: 50px;
+    margin-bottom: 5px;
   }
   
   .greeting h1 {
@@ -238,10 +238,10 @@
     font-size: 24px;
   }
 
-  .route-section {
+  /* .route-section {
     width: 100%;
     display: flex;
     justify-content: center;
     box-sizing: border-box;
     position: relative;
-  }
+  } */
