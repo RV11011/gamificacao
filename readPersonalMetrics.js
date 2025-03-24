@@ -2,6 +2,9 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 require('dotenv').config();
 
 const METRICS_HEADERS = [
+  'Data',
+  'Combinação',
+  'Departamento',
   'Atendente',
   'Função',
   'Atendimentos',
@@ -15,16 +18,13 @@ const METRICS_HEADERS = [
   'Notas Justas',
   'Problemas Comportamentais',
   'Problemas Técnicos',
-  'Problemas Críticos',
-  'Treinamento participado',
-  'Treinamento realizado',
-  'Projetos/Desafios',
-  'PDIs',
   'Cartões de Falha',
   'Cartões de Melhoria',
   'Cartões de Tarefa',
-  'Ajuste do GM',
-  'Total'
+  'Inconsistências no Ponto',
+  'Treinamento participado',
+  'Treinamento realizado',
+  'PDIs'
 ];
 
 const credentials = {
@@ -39,19 +39,19 @@ const cache = {
   ttl: 60 * 1000 // 1 minuto
 };
 
-async function getPersonalMetrics(atendente) {
-  try {
-    // Verificar cache
-    const now = Date.now();
-    if (cache.data && (now - cache.timestamp < cache.ttl)) {
-      return cache.data.find(user => user.Atendente === atendente);
-    }
+// Função para converter HH:MM:SS para minutos
+function convertTimeToMinutes(time) {
+  const [hours, minutes, seconds] = time.split(':').map(Number);
+  return (hours * 60) + minutes + (seconds / 60);
+}
 
+async function getPersonalMetrics(atendente, date = '01') {
+  try {
     const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
     await doc.useServiceAccountAuth(credentials);
     await doc.loadInfo();
 
-    const sheet = doc.sheetsByTitle['Cálculo de XP'];
+    const sheet = doc.sheetsByTitle['Cálculo de Indicadores'];
     if (!sheet) throw new Error('Aba não encontrada');
 
     const rows = await sheet.getRows();
@@ -63,26 +63,39 @@ async function getPersonalMetrics(atendente) {
       return metrics;
     });
 
-    // Atualizar cache
-    cache.data = data;
-    cache.timestamp = now;
+    console.log(`Buscando métricas para ${atendente} no mês ${date}`);
 
-    // Encontrar dados do usuário específico
-    return data.find(user => user.Atendente === atendente);
+    // Filtrar por data e atendente
+    const metricsForDate = data.find(row => {
+      const expectedDate = `01/${date}/2025`;
+      const rowDate = row.Data;
+      return rowDate === expectedDate && row.Atendente === atendente;
+    });
+
+    if (!metricsForDate) {
+      console.log('Nenhuma métrica encontrada para:', atendente, 'na data:', `01/${date}/2025`);
+      return null;
+    }
+
+    // Converter TMF para minutos
+    metricsForDate.TMF = convertTimeToMinutes(metricsForDate.TMF);
+
+    console.log('Métricas encontradas:', metricsForDate);
+    return metricsForDate;
+
   } catch (error) {
     console.error('Erro ao ler métricas pessoais:', error);
     throw error;
   }
 }
 
-// Adicionar ao servidor Express
 module.exports = {
   getPersonalMetrics,
-  // Exemplo de uso na rota:
   setupPersonalMetricsRoutes: (app) => {
     app.get('/api/personal-metrics/:atendente', async (req, res) => {
       try {
-        const metrics = await getPersonalMetrics(req.params.atendente);
+        const { date } = req.query;
+        const metrics = await getPersonalMetrics(req.params.atendente, date);
         if (metrics) {
           res.json({
             atendente: metrics.Atendente,
@@ -90,26 +103,24 @@ module.exports = {
             metricas: {
               atendimentos: {
                 total: parseInt(metrics.Atendimentos),
-                tmf: parseInt(metrics.TMF),
-                tma: parseInt(metrics.TMA)
+                tmf: metrics.TMF, // Já convertido para minutos
+                tma: parseFloat(metrics.TMA)
               },
               implantacoes: parseInt(metrics.Implantações),
               qualidade: {
                 errosDocumentacao: parseInt(metrics['Erros de Documentação']),
-                sla: parseInt(metrics['SLA no Prazo']),
-                mediaScore: parseInt(metrics['Média Score']),
-                taxaAvaliacao: parseInt(metrics['Taxa de Avaliação']),
+                sla: parseFloat(metrics['SLA no Prazo']),
+                mediaScore: parseFloat(metrics['Média Score']),
+                taxaAvaliacao: parseFloat(metrics['Taxa de Avaliação']),
                 notasJustas: parseInt(metrics['Notas Justas'])
               },
               problemas: {
                 comportamentais: parseInt(metrics['Problemas Comportamentais']),
-                tecnicos: parseInt(metrics['Problemas Técnicos']),
-                criticos: parseInt(metrics['Problemas Críticos'])
+                tecnicos: parseInt(metrics['Problemas Técnicos'])
               },
               desenvolvimento: {
                 treinamentosParticipados: parseInt(metrics['Treinamento participado']),
                 treinamentosRealizados: parseInt(metrics['Treinamento realizado']),
-                projetos: parseInt(metrics['Projetos/Desafios']),
                 pdis: parseInt(metrics.PDIs)
               },
               cartoes: {
@@ -117,8 +128,10 @@ module.exports = {
                 melhoria: parseInt(metrics['Cartões de Melhoria']),
                 tarefa: parseInt(metrics['Cartões de Tarefa'])
               },
-              ajusteGM: parseInt(metrics['Ajuste do GM']) || 0,
-              totalXP: parseInt(metrics.Total)
+              inconsistenciasNoPonto: parseInt(metrics['Inconsistências no Ponto']),
+              data: metrics.Data,
+              departamento: metrics.Departamento,
+              funcao: metrics.Função
             }
           });
         } else {

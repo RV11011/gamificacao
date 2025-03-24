@@ -5,10 +5,12 @@ set -a
 source .env
 set +a
 
-# Executar o script readSheet.js
-node readSheet.js &
+# Matar processos anteriores
+pkill -f "node server.js"
+pkill -f "npm start"
 
-sleep 5
+# Limpar o cache do node
+npm cache clean --force
 
 # Executar o servidor backend
 node server.js &

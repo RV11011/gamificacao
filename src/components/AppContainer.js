@@ -6,7 +6,7 @@ import Dashboard from './Dashboard';
 import RankingGeral from './RankingGeral';
 import RankingPorTimes from './RankingPorTimes';
 import PersonalMetrics from './PersonalMetrics';
-import LojaDeTroca from './LojaDeTroca'; // Import the new component
+import LojaDeTroca from './LojaDeTroca';
 import './AppContainer.css';
 
 const AppContainer = ({ username }) => {
@@ -21,8 +21,8 @@ const AppContainer = ({ username }) => {
         <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />}>
           <Route path="ranking-geral" element={<RankingGeral />} />
           <Route path="ranking-por-times" element={<RankingPorTimes />} />
-          <Route path="calculo-xp" element={<PersonalMetrics username={username} />} />
-          <Route path="loja-de-troca" element={<LojaDeTroca />} /> {/* Add the new route */}
+          <Route path="metricas-pessoais" element={<PersonalMetrics username={username} />} />
+          <Route path="loja-de-troca" element={<LojaDeTroca />} />
         </Route>
       </Routes>
     </div>
