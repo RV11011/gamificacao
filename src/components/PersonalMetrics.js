@@ -10,8 +10,9 @@ const PersonalMetrics = ({ username }) => {
   // Função para obter o nome do mês referente
   const getReferenceMonth = (date) => {
     const months = [
-      'Dezembro', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio',
-      'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro'
+      'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio',
+      'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 
+      'Novembro', 'Dezembro'
     ];
     return months[parseInt(date) - 1];
   };
@@ -59,14 +60,12 @@ const PersonalMetrics = ({ username }) => {
             onChange={(e) => setSelectedDate(e.target.value)}
             className="date-select"
           >
-            <option value="01">Janeiro 2025 (Dezembro 2024)</option>
-            <option value="02">Fevereiro 2025 (Janeiro 2025)</option>
-            <option value="03">Março 2025 (Fevereiro 2025)</option>
+            <option value="01">Janeiro</option>
+            <option value="02">Fevereiro</option>
+            <option value="03">Março</option>
           </select>
           <p className="reference-period">
-            Período de Referência: {getReferenceMonth(selectedDate)} de {
-              parseInt(selectedDate) === 1 ? '2024' : '2025'
-            }
+            Período de Referência: {getReferenceMonth(selectedDate)} de 2025
           </p>
         </div>
       </div>

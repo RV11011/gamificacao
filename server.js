@@ -8,8 +8,8 @@ const bodyParser = require('body-parser');
 const https = require('https');
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
-const { getPersonalMetrics } = require('./readPersonalMetrics'); // Adicione esta linha
-const readSheet = require('./readSheet'); // Adicione esta linha
+const readSheet = require('./readSheet');
+const { getPersonalMetrics } = require('./readPersonalMetrics');
 
 const app = express();
 const port = 3001; // Porta para o servidor backend
@@ -64,68 +64,52 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// Atualizar a rota de métricas pessoais
+// Atualizar a rota de métricas pessoais para usar getPersonalMetrics
 app.get('/api/personal-metrics/:atendente', async (req, res) => {
   try {
     const { date } = req.query;
-    console.log('Buscando métricas para:', req.params.atendente, 'data:', date);
-    
     const metrics = await getPersonalMetrics(req.params.atendente, date);
+    
     if (metrics) {
-      // Log dos valores brutos
-      console.log('Valores brutos do TMF:', {
-        tmf_original: metrics.TMF,
-        tmf_parsed: parseFloat(metrics.TMF)
-      });
-
       res.json({
         atendente: metrics.Atendente,
         funcao: metrics.Função,
-        data: metrics.Data,
         metricas: {
           atendimentos: {
-            total: parseInt(metrics.Atendimentos) || 0,
-            tmf: parseFloat(metrics.TMF) || 0,
-            tma: parseFloat(metrics.TMA) || 0
+            total: parseInt(metrics.Atendimentos),
+            tmf: metrics.TMF,
+            tma: parseFloat(metrics.TMA)
           },
-          implantacoes: parseInt(metrics.Implantações) || 0,
+          implantacoes: parseInt(metrics.Implantações),
           qualidade: {
-            errosDocumentacao: parseInt(metrics['Erros de Documentação']) || 0,
-            sla: parseFloat(metrics['SLA no Prazo']) || 0,
-            mediaScore: parseFloat(metrics['Média Score']) || 0,
-            taxaAvaliacao: parseFloat(metrics['Taxa de Avaliação']) || 0,
-            notasJustas: parseInt(metrics['Notas Justas']) || 0
+            errosDocumentacao: parseInt(metrics['Erros de Documentação']),
+            sla: parseFloat(metrics['SLA no Prazo']),
+            mediaScore: parseFloat(metrics['Média Score']),
+            taxaAvaliacao: parseFloat(metrics['Taxa de Avaliação']),
+            notasJustas: parseInt(metrics['Notas Justas'])
           },
           problemas: {
-            comportamentais: parseInt(metrics['Problemas Comportamentais']) || 0,
-            tecnicos: parseInt(metrics['Problemas Técnicos']) || 0
+            comportamentais: parseInt(metrics['Problemas Comportamentais']),
+            tecnicos: parseInt(metrics['Problemas Técnicos'])
           },
           desenvolvimento: {
-            treinamentosParticipados: parseInt(metrics['Treinamento participado']) || 0,
-            treinamentosRealizados: parseInt(metrics['Treinamento realizado']) || 0,
-            pdis: parseInt(metrics.PDIs) || 0
+            treinamentosParticipados: parseInt(metrics['Treinamento participado']),
+            treinamentosRealizados: parseInt(metrics['Treinamento realizado']),
+            pdis: parseInt(metrics.PDIs)
           },
           cartoes: {
-            falha: parseInt(metrics['Cartões de Falha']) || 0,
-            melhoria: parseInt(metrics['Cartões de Melhoria']) || 0,
-            tarefa: parseInt(metrics['Cartões de Tarefa']) || 0
+            falha: parseInt(metrics['Cartões de Falha']),
+            melhoria: parseInt(metrics['Cartões de Melhoria']),
+            tarefa: parseInt(metrics['Cartões de Tarefa'])
           },
-          inconsistenciasNoPonto: parseInt(metrics['Inconsistências no Ponto']) || 0
+          inconsistenciasNoPonto: parseInt(metrics['Inconsistências no Ponto']),
+          data: metrics.Data,
+          departamento: metrics.Departamento,
+          funcao: metrics.Função
         }
-      });
-      
-      // Log do objeto final
-      console.log('Objeto enviado para o frontend:', {
-        tmf_final: parseFloat(metrics.TMF) || 0
       });
     } else {
-      res.status(404).json({ 
-        error: 'Colaborador não encontrado para o período selecionado',
-        details: {
-          atendente: req.params.atendente,
-          date: date
-        }
-      });
+      res.status(404).json({ error: 'Colaborador não encontrado' });
     }
   } catch (error) {
     console.error('Erro ao buscar métricas pessoais:', error);
@@ -133,6 +117,7 @@ app.get('/api/personal-metrics/:atendente', async (req, res) => {
   }
 });
 
+// Manter as rotas de ranking usando readSheet
 app.get('/api/ranking-colaboradores', async (req, res) => {
   try {
     const data = await readSheet();
