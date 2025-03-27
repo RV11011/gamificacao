@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import Sidebar from './components/Sidebar';
-import Background from './components/Background';
-import AnimatedRoutes from './components/AppContainer';
 import Login from './components/Login';
 import ParticlesBackground from './components/ParticlesBackground';
 import './App.css';
+
+const Sidebar = lazy(() => import('./components/Sidebar'));
+const Background = lazy(() => import('./components/Background'));
+const AnimatedRoutes = lazy(() => import('./components/AppContainer'));
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -41,20 +42,22 @@ const App = () => {
   }
 
   return (
-    <Router>
-      <div className="app-container">
-        <ParticlesBackground />
-        <Background />
-        <Sidebar />
-        <div className="main-content">
-          <button className="logout-button" onClick={handleLogout}>
-            <i className="fas fa-sign-out-alt"></i>
-            Logout
-          </button>
-          <AnimatedRoutes username={username} />
+    <Suspense fallback={<div>Carregando...</div>}>
+      <Router>
+        <div className="app-container">
+          <ParticlesBackground />
+          <Background />
+          <Sidebar />
+          <div className="main-content">
+            <button className="logout-button" onClick={handleLogout}>
+              <i className="fas fa-sign-out-alt"></i>
+              Logout
+            </button>
+            <AnimatedRoutes username={username} />
+          </div>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </Suspense>
   );
 };
 

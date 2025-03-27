@@ -35,9 +35,8 @@
 
 .main-logo {
   width: 300px;
-  height: 300px;
-  margin: 0 auto 5px; /* Reduzido o margin-bottom */
-  margin-top: -60px ;
+  height: auto; /* Mantém a proporção */
+  margin: 20px auto 20px; /* Adicionada margem superior de 20px */
   animation: pulse 2s infinite;
 }
 

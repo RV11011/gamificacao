@@ -120,9 +120,15 @@ app.get('/api/personal-metrics/:atendente', async (req, res) => {
 // Manter as rotas de ranking usando readSheet
 app.get('/api/ranking-colaboradores', async (req, res) => {
   try {
+    const { page = 1, limit = 10 } = req.query;
     const data = await readSheet();
     const sortedData = Object.values(data).sort((a, b) => b.Total - a.Total);
-    res.json(sortedData);
+
+    // Paginação
+    const startIndex = (page - 1) * limit;
+    const paginatedData = sortedData.slice(startIndex, startIndex + limit);
+
+    res.json(paginatedData);
   } catch (error) {
     console.error('Erro ao buscar dados da planilha:', error);
     res.status(500).send('Erro ao buscar dados da planilha');
