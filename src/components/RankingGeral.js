@@ -18,6 +18,14 @@ const RankingGeral = () => {
     fetchData();
   }, []);
 
+  const getPhotoPath = (name) => {
+    try {
+      return require(`../assets/images/${name}.jpg`);
+    } catch {
+      return '/default-avatar.jpg'; // Caminho para uma imagem padrão
+    }
+  };
+
   return (
     <div className="ranking-container">
       <h2>Ranking Geral</h2>
@@ -38,7 +46,14 @@ const RankingGeral = () => {
                 {index === 2 && <i className="fas fa-medal star-icon" style={{ color: '#CD7F32' }}></i>}
                 {index + 1}
               </td>
-              <td>{user.Atendente}</td>
+              <td>
+                <img
+                  src={getPhotoPath(user.Atendente)}
+                  alt={user.Atendente}
+                  className="ranking-photo"
+                />
+                {user.Atendente}
+              </td>
               <td>{user.Total} XP</td>
             </tr>
           ))}
@@ -46,6 +61,6 @@ const RankingGeral = () => {
       </table>
     </div>
   );
-}
+};
 
 export default RankingGeral;

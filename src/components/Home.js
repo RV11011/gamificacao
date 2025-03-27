@@ -48,6 +48,14 @@ const Home = ({ username }) => {
     return "Boa noite";
   };
 
+  const getPhotoPath = (name) => {
+    try {
+      return require(`../assets/images/${name}.jpg`);
+    } catch {
+      return '/default-avatar.jpg'; // Caminho para uma imagem padrão
+    }
+  };
+
   // Usar o nome completo do usuário se disponível, caso contrário usar o username
   const displayName = userData?.full_name || username;
 
@@ -77,7 +85,7 @@ const Home = ({ username }) => {
                 <i className="fas fa-medal"></i>
               </div>
               <div className="glass-card">
-                <img src={`/images/${top3[1]?.Atendente}.jpg`} alt={top3[1]?.Atendente} className="podium-photo" />
+                <img src={getPhotoPath(top3[1]?.Atendente)} alt={top3[1]?.Atendente} className="podium-photo" />
                 <div className="podium-info">
                   <h2>{top3[1]?.Atendente}</h2>
                   <p className="department">{top3[1]?.Departamento}</p>
@@ -94,7 +102,7 @@ const Home = ({ username }) => {
                 </div>
               </div>
               <div className="glass-card highlight">
-                <img src={`/images/${top3[0]?.Atendente}.jpg`} alt={top3[0]?.Atendente} className="podium-photo" />
+                <img src={getPhotoPath(top3[0]?.Atendente)} alt={top3[0]?.Atendente} className="podium-photo" />
                 <div className="podium-info">
                   <h2>{top3[0]?.Atendente}</h2>
                   <p className="department">{top3[0]?.Departamento}</p>
@@ -109,7 +117,7 @@ const Home = ({ username }) => {
                 <i className="fas fa-medal"></i>
               </div>
               <div className="glass-card">
-                <img src={`/images/${top3[2]?.Atendente}.jpg`} alt={top3[2]?.Atendente} className="podium-photo" />
+                <img src={getPhotoPath(top3[2]?.Atendente)} alt={top3[2]?.Atendente} className="podium-photo" />
                 <div className="podium-info">
                   <h2>{top3[2]?.Atendente}</h2>
                   <p className="department">{top3[2]?.Departamento}</p>

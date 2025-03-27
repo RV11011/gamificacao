@@ -184,11 +184,12 @@
 .medal.bronze { color: #CD7F32; }
 
 .podium-photo {
-  width: 220px;
-  height: 153px;
-  border-radius: 12px;
-  margin-bottom: 15px;
+  width: 150px;
+  height: 150px;
   object-fit: cover;
+  margin-bottom: 10px;
+  border: 3px solid #fff;
+  border-radius: 0; /* Remove a borda circular */
 }
 
 .podium-info {
