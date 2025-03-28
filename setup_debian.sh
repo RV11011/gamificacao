@@ -33,26 +33,16 @@ usermod -aG docker $USER
 
 # Criar diretório do projeto
 echo "Configurando o projeto..."
-mkdir -p /opt/gamificacao
-cd /opt/gamificacao
+mkdir -p /gamificacao
+cd /gamificacao
 
-# Clonar o repositório (substitua pela URL do seu repositório)
-# git clone [URL_DO_SEU_REPOSITORIO] .
+# Copiar arquivos do projeto
+echo "Copiando arquivos do projeto..."
+cp -r /caminho/do/projeto/* .
 
 # Instalar dependências do projeto
 echo "Instalando dependências do projeto..."
 npm install
-
-# Configurar variáveis de ambiente
-echo "Configurando variáveis de ambiente..."
-cat > .env << EOL
-USER1_USERNAME=admin
-USER1_PASSWORD=\$(openssl rand -base64 12)
-USER2_USERNAME=user2
-USER2_PASSWORD=\$(openssl rand -base64 12)
-USER3_USERNAME=user3
-USER3_PASSWORD=\$(openssl rand -base64 12)
-EOL
 
 # Iniciar o banco de dados com Docker Compose
 echo "Iniciando o banco de dados..."

@@ -18,15 +18,19 @@ const port = 3001;
 console.log('Iniciando servidor...');
 console.log('Interfaces de rede disponíveis:');
 Object.values(os.networkInterfaces()).forEach(interfaces => {
-  interfaces.forEach(interface => {
-    if (interface.family === 'IPv4' && !interface.internal) {
-      console.log(`- ${interface.address}`);
+  interfaces.forEach(networkInterface => {
+    if (networkInterface.family === 'IPv4' && !networkInterface.internal) {
+      console.log(`- ${networkInterface.address}`);
     }
   });
 });
 
-// Configuração do CORS para desenvolvimento
-app.use(cors()); // Permite todas as origens em desenvolvimento
+// Configuração do CORS
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://192.168.27.83:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 
 app.use(bodyParser.json());
 
@@ -194,6 +198,84 @@ app.get('/api/ranking-times', async (req, res) => {
   }
 });
 
+// Rota para buscar membros de um time específico
+app.get('/api/team-members/:department', async (req, res) => {
+  try {
+    const { department } = req.params;
+    console.log('Recebida requisição para departamento:', department);
+
+    // Decodificar o departamento e restaurar caracteres especiais
+    let decodedDepartment = decodeURIComponent(department)
+      .replace('--', '/');
+
+    // Tratamento especial para casos específicos
+    const departmentMap = {
+      'Instalacao': 'Instalação',
+      'instalacao': 'Instalação',
+      'ACS': 'ACS',
+      '12/36': '12/36'
+    };
+
+    if (departmentMap[decodedDepartment]) {
+      decodedDepartment = departmentMap[decodedDepartment];
+    }
+
+    console.log('Departamento decodificado:', decodedDepartment);
+
+    // Buscar dados da planilha primeiro
+    const sheetData = await readSheet();
+    
+    // Filtrar membros do departamento diretamente da planilha
+    const teamMembers = Object.values(sheetData)
+      .filter(data => {
+        const normalizeString = str => str?.toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .trim();
+        
+        return normalizeString(data.Departamento) === normalizeString(decodedDepartment);
+      })
+      .map(data => ({
+        full_name: data.Atendente,
+        role: 'Colaborador', // Valor padrão, já que não temos essa info na planilha
+        xp: parseInt(data.Total) || 0
+      }));
+
+    // Se não encontrar membros, retornar array vazio
+    if (teamMembers.length === 0) {
+      console.log('Nenhum membro encontrado para o departamento:', decodedDepartment);
+      return res.json([]);
+    }
+
+    // Ordenar por XP (maior para menor)
+    teamMembers.sort((a, b) => b.xp - a.xp);
+
+    console.log(`Retornando ${teamMembers.length} membros do time ${decodedDepartment}`);
+    res.json(teamMembers);
+
+  } catch (error) {
+    console.error('Erro ao buscar membros do time:', error);
+    res.status(500).json({ 
+      error: 'Erro ao buscar membros do time',
+      details: error.message,
+      department: req.params.department
+    });
+  }
+});
+
+// Rota para obter interfaces de rede
+app.get('/api/network-interfaces', (req, res) => {
+  const interfaces = [];
+  Object.values(os.networkInterfaces()).forEach(networkInterfaces => {
+    networkInterfaces.forEach(networkInterface => {
+      if (networkInterface.family === 'IPv4' && !networkInterface.internal) {
+        interfaces.push(networkInterface.address);
+      }
+    });
+  });
+  res.json(interfaces);
+});
+
 // Carregar certificados SSL
 const privateKeyPath = 'path/to/your/private.key';
 const certificatePath = 'path/to/your/certificate.crt';
@@ -220,9 +302,9 @@ if (fs.existsSync(privateKeyPath) && fs.existsSync(certificatePath) && fs.exists
     console.log(`Servidor backend rodando em http://0.0.0.0:${port}`);
     console.log('Endereços disponíveis:');
     Object.values(os.networkInterfaces()).forEach(interfaces => {
-      interfaces.forEach(interface => {
-        if (interface.family === 'IPv4' && !interface.internal) {
-          console.log(`- http://${interface.address}:${port}`);
+      interfaces.forEach(networkInterface => {
+        if (networkInterface.family === 'IPv4' && !networkInterface.internal) {
+          console.log(`- ${networkInterface.address}`);
         }
       });
     });

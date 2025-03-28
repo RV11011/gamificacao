@@ -58,3 +58,121 @@
   margin-right: 10px;
   color: #ffd700;
 }
+
+/* Estilos do botão do time */
+.team-name-button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+  text-align: left;
+  transition: color 0.3s ease;
+}
+
+.team-name-button:hover {
+  color: #4a90e2;
+  text-decoration: underline;
+}
+
+/* Estilos do Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: rgba(28, 33, 38, 0.95);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(74, 144, 226, 0.2);
+  padding: 20px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(74, 144, 226, 0.2);
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #4a90e2;
+  font-size: 1.5em;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  transition: color 0.3s ease;
+}
+
+.close-button:hover {
+  color: #4a90e2;
+}
+
+/* Tabela de membros */
+.members-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.members-table th,
+.members-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.members-table th {
+  color: #4a90e2;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  letter-spacing: 1px;
+}
+
+.members-table tr:hover {
+  background: rgba(74, 144, 226, 0.1);
+}
+
+.error-message {
+  color: #ff4d4d;
+  padding: 15px;
+  text-align: center;
+  background: rgba(255, 77, 77, 0.1);
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.empty-message {
+  color: #4a90e2;
+  padding: 15px;
+  text-align: center;
+  background: rgba(74, 144, 226, 0.1);
+  border-radius: 8px;
+  margin: 10px 0;
+}
