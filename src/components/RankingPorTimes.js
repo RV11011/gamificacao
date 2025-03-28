@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './RankingPorTimes.css';
+import API_BASE_URL from '../config';
 
 const RankingPorTimes = () => {
   const [rankings, setRankings] = useState([]);
@@ -7,7 +8,7 @@ const RankingPorTimes = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://192.168.14.31:3001/api/ranking-times'); // Atualize o endereço IP aqui
+        const response = await fetch(`${API_BASE_URL}/api/ranking-times`);
         const data = await response.json();
         setRankings(data);
       } catch (error) {

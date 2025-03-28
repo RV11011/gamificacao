@@ -10,12 +10,32 @@ const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
 const readSheet = require('./readSheet');
 const { getPersonalMetrics } = require('./readPersonalMetrics');
+const os = require('os');
 
 const app = express();
-const port = 3001; // Porta para o servidor backend
+const port = 3001;
 
-app.use(cors()); // Permitir requisições CORS
-app.use(bodyParser.json()); // Parse JSON bodies
+console.log('Iniciando servidor...');
+console.log('Interfaces de rede disponíveis:');
+Object.values(os.networkInterfaces()).forEach(interfaces => {
+  interfaces.forEach(interface => {
+    if (interface.family === 'IPv4' && !interface.internal) {
+      console.log(`- ${interface.address}`);
+    }
+  });
+});
+
+// Configuração do CORS para desenvolvimento
+app.use(cors()); // Permite todas as origens em desenvolvimento
+
+app.use(bodyParser.json());
+
+// Middleware para logging
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+  console.log('Headers:', req.headers);
+  next();
+});
 
 // Configuração do pool de conexões PostgreSQL
 const pool = new Pool({
@@ -24,6 +44,21 @@ const pool = new Pool({
   host: 'localhost',
   database: 'gamificacao_db',
   port: 5432
+});
+
+// Teste de conexão com o banco
+pool.connect((err, client, release) => {
+  if (err) {
+    console.error('Erro ao conectar ao banco de dados:', err);
+  } else {
+    console.log('Conexão com o banco de dados estabelecida com sucesso!');
+    release();
+  }
+});
+
+// Rota de teste
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'API está funcionando!' });
 });
 
 // Usuários predefinidos
@@ -181,7 +216,20 @@ if (fs.existsSync(privateKeyPath) && fs.existsSync(certificatePath) && fs.exists
     console.log(`Servidor backend rodando em https://localhost:${port}`);
   });
 } else {
-  app.listen(port, () => {
-    console.log(`Servidor backend rodando em http://localhost:${port}`);
+  const server = app.listen(port, '0.0.0.0', () => {
+    console.log(`Servidor backend rodando em http://0.0.0.0:${port}`);
+    console.log('Endereços disponíveis:');
+    Object.values(os.networkInterfaces()).forEach(interfaces => {
+      interfaces.forEach(interface => {
+        if (interface.family === 'IPv4' && !interface.internal) {
+          console.log(`- http://${interface.address}:${port}`);
+        }
+      });
+    });
+  });
+
+  // Tratamento de erros do servidor
+  server.on('error', (error) => {
+    console.error('Erro no servidor:', error);
   });
 }

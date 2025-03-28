@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Home.css';
+import API_BASE_URL from '../config';
 
 const Home = ({ username }) => {
   const [top3, setTop3] = useState([]);
@@ -7,10 +8,9 @@ const Home = ({ username }) => {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    // Buscar dados do usuário logado
     const fetchUserData = async () => {
       try {
-        const response = await fetch('http://192.168.14.31:3001/api/login', {
+        const response = await fetch(`${API_BASE_URL}/api/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username })
@@ -28,7 +28,7 @@ const Home = ({ username }) => {
   useEffect(() => {
     const fetchTop3 = async () => {
       try {
-        const response = await fetch('http://192.168.14.31:3001/api/ranking-colaboradores'); // Atualize o endereço IP aqui
+        const response = await fetch(`${API_BASE_URL}/api/ranking-colaboradores`);
         const data = await response.json();
         setTop3(data.slice(0, 3));
       } catch (error) {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Login.css';
+import API_BASE_URL from '../config';
 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
@@ -8,20 +9,24 @@ const Login = ({ onLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('http://192.168.14.31:3001/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
-    });
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
 
-    if (response.ok) {
-      const data = await response.json();
-      // Guardar o nome completo do atendente
-      localStorage.setItem('fullName', data.full_name);
-      localStorage.setItem('dbUsername', data.username); // Guardar o username do banco
-      onLogin(data.full_name);
-    } else {
-      setError('Credenciais inválidas');
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('fullName', data.full_name);
+        localStorage.setItem('dbUsername', data.username);
+        onLogin(data.full_name);
+      } else {
+        setError('Credenciais inválidas');
+      }
+    } catch (error) {
+      console.error('Erro ao fazer login:', error);
+      setError('Erro ao conectar ao servidor');
     }
   };
 

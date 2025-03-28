@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import './PersonalMetrics.css';
+import API_BASE_URL from '../config';
 
 const PersonalMetrics = ({ username }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedPeriod, setSelectedPeriod] = useState('01'); // Padrão: Janeiro
+  const [selectedPeriod, setSelectedPeriod] = useState('01');
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await fetch(
-          `http://192.168.14.31:3001/api/personal-metrics/${username}?date=${selectedPeriod}`
+          `${API_BASE_URL}/api/personal-metrics/${username}?date=${selectedPeriod}`
         );
         if (!response.ok) throw new Error('Erro ao buscar métricas');
         const data = await response.json();
@@ -25,7 +26,7 @@ const PersonalMetrics = ({ username }) => {
     };
 
     fetchUserData();
-  }, [username, selectedPeriod]); // Atualiza os dados ao mudar o período
+  }, [username, selectedPeriod]);
 
   const getPhotoPath = (name) => {
     try {

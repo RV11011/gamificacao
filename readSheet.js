@@ -16,18 +16,30 @@ async function readSheet() {
     }
 
     const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
+    
+    // Tratamento correto da chave privada
+    const privateKey = process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n');
+    
     await doc.useServiceAccountAuth({
       client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      private_key: privateKey
     });
+
+    console.log('Conectando à planilha...');
     await doc.loadInfo();
+    console.log('Planilha carregada:', doc.title);
 
     const sheet = doc.sheetsByTitle['Cálculo de XP'];
-    if (!sheet) throw new Error('Aba não encontrada');
+    if (!sheet) {
+      console.error('Abas disponíveis:', doc.sheetsByTitle.map(s => s.title));
+      throw new Error('Aba "Cálculo de XP" não encontrada');
+    }
 
+    console.log('Lendo dados da aba:', sheet.title);
     const rows = await sheet.getRows();
-    const data = {};
+    console.log(`Encontradas ${rows.length} linhas`);
 
+    const data = {};
     rows.forEach((row) => {
       const atendente = row.Atendente;
       if (!data[atendente]) {
@@ -45,10 +57,11 @@ async function readSheet() {
     cache.data = data;
     cache.timestamp = Date.now();
 
-    console.log('Dados carregados da planilha');
+    console.log('Dados carregados com sucesso');
     return data;
   } catch (error) {
     console.error('Erro ao ler a planilha:', error.message);
+    console.error('Stack trace:', error.stack);
     throw error;
   }
 }
